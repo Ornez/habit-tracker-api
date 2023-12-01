@@ -2,10 +2,10 @@
 
 namespace habit_tracker_api.Accounts.DTOs;
 
-public class RegisterDto
+public record RegisterDto
 {
     [MinLength(5)]
-    public string Username { get; set; }
+    public required string Username { get; set; }
     [MinLength(8)]
-    public string Password { get; set; }
+    public required string Password { get; set; }
 }

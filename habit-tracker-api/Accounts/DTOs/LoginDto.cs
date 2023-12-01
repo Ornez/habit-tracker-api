@@ -1,7 +1,11 @@
-﻿namespace habit_tracker_api.Accounts.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class LoginDto
+namespace habit_tracker_api.Accounts.DTOs;
+
+public record LoginDto
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
+    [MinLength(5)]
+    public required string Username { get; set; }
+    [MinLength(8)]
+    public required string Password { get; set; }
 }

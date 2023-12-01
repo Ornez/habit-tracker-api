@@ -14,6 +14,7 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUser
     }
 
     public DbSet<Habit> Habits { get; set; }
+    public DbSet<TimePeriod> Occurrences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

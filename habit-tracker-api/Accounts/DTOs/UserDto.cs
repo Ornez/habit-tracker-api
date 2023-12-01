@@ -1,7 +1,7 @@
 ﻿namespace habit_tracker_api.Accounts.DTOs;
 
-public class UserDto
+public record UserDto
 {
-    public string Username { get; set; }
-    public string Token { get; set; }
+    public required string Username { get; set; }
+    public required string Token { get; set; }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using habit_tracker_api.Shared.Data;
@@ -11,9 +12,11 @@ using habit_tracker_api.Shared.Data;
 namespace habit_tracker_api.Shared.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231201103233_UpdateHabit")]
+    partial class UpdateHabit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,9 +232,6 @@ namespace habit_tracker_api.Shared.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("text");
@@ -250,9 +250,12 @@ namespace habit_tracker_api.Shared.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Habits");
                 });
@@ -268,7 +271,7 @@ namespace habit_tracker_api.Shared.Data.Migrations
                     b.Property<DateTime>("End")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("HabitId")
+                    b.Property<int?>("HabitId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Start")
@@ -278,7 +281,7 @@ namespace habit_tracker_api.Shared.Data.Migrations
 
                     b.HasIndex("HabitId");
 
-                    b.ToTable("Occurrences");
+                    b.ToTable("TimePeriod");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -338,24 +341,20 @@ namespace habit_tracker_api.Shared.Data.Migrations
 
             modelBuilder.Entity("habit_tracker_api.Habits.Entities.Habit", b =>
                 {
-                    b.HasOne("habit_tracker_api.Accounts.Entities.AppUser", "AppUser")
-                        .WithMany("Habits")
-                        .HasForeignKey("AppUserId")
+                    b.HasOne("habit_tracker_api.Accounts.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AppUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("habit_tracker_api.Habits.Entities.TimePeriod", b =>
                 {
-                    b.HasOne("habit_tracker_api.Habits.Entities.Habit", "Habit")
+                    b.HasOne("habit_tracker_api.Habits.Entities.Habit", null)
                         .WithMany("Occurrences")
-                        .HasForeignKey("HabitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habit");
+                        .HasForeignKey("HabitId");
                 });
 
             modelBuilder.Entity("habit_tracker_api.Accounts.Entities.AppRole", b =>
@@ -365,8 +364,6 @@ namespace habit_tracker_api.Shared.Data.Migrations
 
             modelBuilder.Entity("habit_tracker_api.Accounts.Entities.AppUser", b =>
                 {
-                    b.Navigation("Habits");
-
                     b.Navigation("UserRoles");
                 });
 
